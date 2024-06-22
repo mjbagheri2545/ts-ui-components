@@ -1,3 +1,5 @@
+import { Component } from "../components/Component";
+
 type InsertStringAtSpecificIndex = {
   string: string;
   substring: string;
@@ -12,9 +14,9 @@ export function insertStringAtSpecificIndex({
   return `${string.slice(0, index)}${substring}${string.slice(index)}`;
 }
 
-export function qs<Element extends HTMLElement = HTMLElement>(
+export function qs<Element extends Component = Component>(
   query: string,
-  element: HTMLElement | Document = document
+  component: Component | Document = document
 ): Element | null {
-  return element.querySelector<Element>(query);
+  return component.querySelector<Element>(query);
 }

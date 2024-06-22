@@ -22,6 +22,7 @@ import {
 } from "./style.utilities";
 import { HSL as ColorConvertHSL } from "color-convert/conversions";
 import { ClassNames } from "../constants/types/classNames.types";
+import { Component } from "../components/Component";
 
 export function setColors(): void {
   setPaletteColors();
@@ -68,12 +69,12 @@ function setPaletteColors(
         properties,
       });
     } else if (isLightDark(key)) {
-      setColorToElement({
+      setColorToComponent({
         color: colors[key],
         colorKey: key,
       });
     } else {
-      setColorToElement({
+      setColorToComponent({
         color: colors[key],
         colorKey: key === "main" ? colorKey : `${colorKey}-${key}`,
       });
@@ -192,19 +193,19 @@ function getModeColors(): ModeColors {
   return MODE_COLORS[mode];
 }
 
-type SetColorToElement = {
-  element?: HTMLElement;
+type setColorToComponent = {
+  component?: Component;
   classNames?: ClassNames;
   color: CSSColor;
   colorKey?: string;
 };
 
-export function setColorToElement({
-  element = document.documentElement,
+export function setColorToComponent({
+  component = document.documentElement,
   classNames = "",
   color,
   colorKey = "",
-}: SetColorToElement) {
+}: setColorToComponent) {
   const { hue, saturation, lightness, alpha = 1 } = colorConvertor(color);
 
   const properties = [
@@ -219,7 +220,7 @@ export function setColorToElement({
     },
   ] satisfies Properties;
 
-  setPropertiesToStyleSheet({ element, classNames, properties });
+  setPropertiesToStyleSheet({ component, classNames, properties });
 }
 
 function isHex(color: any): color is HEX {

@@ -1,0 +1,10 @@
+.Component.light {
+  --color: var(--light);
+  --color-channel: var(--light-channel);
+  --text-color: var(--dark);
+}
+.Component.dark {
+  --color: var(--dark);
+  --color-channel: var(--dark-channel);
+  --text-color: var(--light);
+}
