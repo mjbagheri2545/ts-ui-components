@@ -49,13 +49,13 @@ type LightAndDark = {
 
 type LightAndDarkKeys = keyof LightAndDark;
 
-export type CssOrLightAndDark = CSSColor | LightAndDarkKeys;
+export type CssColorOrLightAndDark = CSSColor | LightAndDarkKeys;
 
 export type PaletteColor = Readonly<{
   light?: CSSColor;
   main: CSSColor;
   dark?: CSSColor;
-  text: CssOrLightAndDark;
+  text: CssColorOrLightAndDark;
   brightenAmount?: number;
   darkenAmount?: number;
   lightenAmount?: number;
@@ -121,12 +121,12 @@ type GreyColorKeys = "pure" | "primary" | "one" | "two" | "three" | "four";
 
 export type ModeColors = Readonly<{
   grey: {
-    [Key in GreyColorKeys]: CssOrLightAndDark;
+    [Key in GreyColorKeys]: CssColorOrLightAndDark;
   };
   text: {
-    primary: CssOrLightAndDark;
-    secondary: CssOrLightAndDark;
-    tertiary: CssOrLightAndDark;
+    primary: CssColorOrLightAndDark;
+    secondary: CssColorOrLightAndDark;
+    tertiary: CssColorOrLightAndDark;
   };
   actions: {
     disabled: CSSColor;

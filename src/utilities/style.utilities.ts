@@ -1,14 +1,19 @@
-import { Component } from "../components/Component";
+import { NormalComponent } from "../components/Component";
 import {
   DEFAULT_MODE,
   Mode,
   ModeExcludedSystem,
 } from "../constants/global/style.global";
-import { ClassName, ClassNames } from "../constants/types/classNames.types";
+import { ClassNames } from "../constants/types/classNames.types";
 import { TypeOrTypeArray } from "../constants/types/utilities.types";
 import { setColors } from "./color.utilities";
-import { insertStringAtSpecificIndex, qs } from "./common.utilities";
-import { appendChildren } from "./components.utilities";
+import { insertStringAtSpecificIndex } from "./common.utilities";
+import {
+  appendChild,
+  classNamesToArray,
+  getElementComponent,
+  qs,
+} from "./components.utilities";
 import { localStorageGetItem } from "./localStorage.utilities";
 
 export function styleInitializer() {
@@ -19,7 +24,7 @@ export function styleInitializer() {
 function createStyleSheet(): void {
   const styleSheet = document.createElement("style");
   styleSheet.dataset.styleSheet = "";
-  appendChildren(document.head, styleSheet);
+  appendChild(document.head, styleSheet);
 }
 
 export function getMode(): ModeExcludedSystem {
@@ -41,22 +46,23 @@ export type Property = {
 export type Properties = TypeOrTypeArray<Property>;
 
 type SetProperties = {
-  component: Component;
+  element: NormalComponent;
   properties: Properties;
 };
 
-export function setProperties({ component, properties }: SetProperties): void {
+export function setProperties({ element, properties }: SetProperties): void {
+  const elementComponent = getElementComponent(element);
   if (Array.isArray(properties)) {
-    return properties.forEach((property) => {
-      component.style.setProperty(property.key, property.value);
+    properties.forEach((property) => {
+      elementComponent.style.setProperty(property.key, property.value);
     });
+    return;
   }
 
-  component.style.setProperty(properties.key, properties.value);
+  elementComponent.style.setProperty(properties.key, properties.value);
 }
-
 type GetProperties<Keys> = {
-  component: Component;
+  element: NormalComponent;
   keys: Keys;
   options?: Partial<{
     searchValue: string;
@@ -67,20 +73,20 @@ type GetProperties<Keys> = {
 };
 
 export function getProperties({
-  component,
+  element,
   keys,
   options = {},
 }: GetProperties<TypeOrTypeArray<string>>): TypeOrTypeArray<string | number> {
   if (Array.isArray(keys)) {
     return keys.map((key) => {
-      return handleGetProperty({ component, keys: key, options });
+      return handleGetProperty({ element, keys: key, options });
     });
   }
-  return handleGetProperty({ component, keys, options });
+  return handleGetProperty({ element, keys, options });
 }
 
 function handleGetProperty({
-  component,
+  element,
   keys,
   options: {
     searchValue = "",
@@ -89,21 +95,21 @@ function handleGetProperty({
     pseudoElement = "",
   } = {},
 }: GetProperties<string>): string | number {
-  const value = getComputedStyle(component, pseudoElement)
+  const value = getComputedStyle(getElementComponent(element), pseudoElement)
     .getPropertyValue(keys)
     .replace(searchValue, replaceValue);
   return isNumberNeed ? parseFloat(value) : value;
 }
 
 type SetPropertiesToStyleSheet = {
-  component?: Component;
+  element?: NormalComponent;
   properties: Properties;
   classNames?: ClassNames;
   isDefaultSelectorNeed?: boolean;
 };
 
 export function setPropertiesToStyleSheet({
-  component = document.documentElement,
+  element = document.documentElement,
   properties,
   classNames = "",
   isDefaultSelectorNeed = true,
@@ -123,7 +129,7 @@ export function setPropertiesToStyleSheet({
     formattedProperties = `${properties.key}: ${properties.value};`;
   }
 
-  const componentClassNamesSeletor = classNamesToArray(classNames).reduce(
+  const elementClassNamesSeletor = classNamesToArray(classNames).reduce(
     (previousClassNamesSeletor, className) => {
       if (className.length > 0) {
         return `${previousClassNamesSeletor}.${className}`;
@@ -133,21 +139,23 @@ export function setPropertiesToStyleSheet({
     ""
   );
 
-  const componentDefaultSelector =
-    component.classList.length > 0
-      ? `.${component.classList[0]}`
-      : component.nodeName;
+  const elementComponent = getElementComponent(element);
 
-  const componentSelector = isDefaultSelectorNeed
-    ? `${componentDefaultSelector}${componentClassNamesSeletor}`
-    : componentClassNamesSeletor;
+  const elementDefaultSelector =
+    elementComponent.classList.length > 0
+      ? `.${elementComponent.classList[0]}`
+      : elementComponent.nodeName;
+
+  const elementSelector = isDefaultSelectorNeed
+    ? `${elementDefaultSelector}${elementClassNamesSeletor}`
+    : elementClassNamesSeletor;
 
   let oldPropertiesValue = "";
   const oldTextContent = styleSheet.textContent || "";
 
-  if (oldTextContent.includes(componentSelector)) {
+  if (oldTextContent.includes(elementSelector)) {
     oldPropertiesValue = oldTextContent
-      .split(`${componentSelector} {`)[1]
+      .split(`${elementSelector} {`)[1]
       .split("}")[0];
   }
 
@@ -166,23 +174,7 @@ export function setPropertiesToStyleSheet({
       index: indexOfNewFormattedProperties,
     });
   } else {
-    textContent = `${oldTextContent} ${componentSelector} {${formattedProperties}}`;
+    textContent = `${oldTextContent} ${elementSelector} {${formattedProperties}}`;
   }
   styleSheet.textContent = textContent;
-}
-
-export function classNamesToArray(classNames: ClassNames): ClassName[] {
-  if (Array.isArray(classNames)) {
-    return classNames.filter((className) => className != null) as ClassName[];
-  }
-  return classNames == null ? [] : classNames.split(" ");
-}
-
-export function addClassNames(
-  component: Component,
-  classNames: ClassNames
-): void {
-  classNamesToArray(classNames).forEach((className) =>
-    className.length > 0 ? component.classList.add(className) : null
-  );
 }

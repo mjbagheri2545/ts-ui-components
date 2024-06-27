@@ -12,7 +12,7 @@ import {
   CSSColor,
   CSSRGB,
   CSSHSL,
-  CssOrLightAndDark,
+  CssColorOrLightAndDark,
   PaletteColor,
 } from "../constants/global/color.global";
 import {
@@ -22,7 +22,6 @@ import {
 } from "./style.utilities";
 import { HSL as ColorConvertHSL } from "color-convert/conversions";
 import { ClassNames } from "../constants/types/classNames.types";
-import { Component } from "../components/Component";
 
 export function setColors(): void {
   setPaletteColors();
@@ -68,13 +67,13 @@ function setPaletteColors(
       setPropertiesToStyleSheet({
         properties,
       });
-    } else if (isLightDark(key)) {
-      setColorToComponent({
+    } else if (isLightDark(key) && colorKey.length === 0) {
+      setColorToElement({
         color: colors[key],
         colorKey: key,
       });
     } else {
-      setColorToComponent({
+      setColorToElement({
         color: colors[key],
         colorKey: key === "main" ? colorKey : `${colorKey}-${key}`,
       });
@@ -138,8 +137,8 @@ function setComponentColors(): void {
   });
 }
 
-function getTextColorValue(color: CssOrLightAndDark) {
-  return isLightDark(color) || isLightDark(color) ? `var(--${color})` : color;
+function getTextColorValue(color: CssColorOrLightAndDark) {
+  return isLightDark(color) ? `var(--${color})` : color;
 }
 
 function getPaletteColors(): PaletteColors {
@@ -154,7 +153,7 @@ function getPaletteColors(): PaletteColors {
       const tokenColor = PALETTE_COLORS[key as ExcludedColorKeys];
       palette[key as ExcludedColorKeys] = {
         ...tokenColor,
-        ...(tokenColor.dark == null
+        ...(tokenColor.dark != null
           ? {}
           : {
               dark: darken(
@@ -162,7 +161,7 @@ function getPaletteColors(): PaletteColors {
                 ...getBrightenAmount(tokenColor, true)
               ),
             }),
-        ...(tokenColor.light == null
+        ...(tokenColor.light != null
           ? {}
           : {
               light: lighten(
@@ -193,19 +192,19 @@ function getModeColors(): ModeColors {
   return MODE_COLORS[mode];
 }
 
-type setColorToComponent = {
-  component?: Component;
+type SetColorToElement = {
+  element?: HTMLElement;
   classNames?: ClassNames;
   color: CSSColor;
   colorKey?: string;
 };
 
-export function setColorToComponent({
-  component = document.documentElement,
+export function setColorToElement({
+  element = document.documentElement,
   classNames = "",
   color,
   colorKey = "",
-}: setColorToComponent) {
+}: SetColorToElement) {
   const { hue, saturation, lightness, alpha = 1 } = colorConvertor(color);
 
   const properties = [
@@ -220,7 +219,7 @@ export function setColorToComponent({
     },
   ] satisfies Properties;
 
-  setPropertiesToStyleSheet({ component, classNames, properties });
+  setPropertiesToStyleSheet({ element, classNames, properties });
 }
 
 function isHex(color: any): color is HEX {

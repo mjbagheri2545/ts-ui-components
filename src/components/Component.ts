@@ -2,8 +2,10 @@ import { ColorKeys } from "../constants/global/color.global";
 import { TypeOrTypeArray } from "../constants/types/utilities.types";
 import HtmlTags from "../constants/types/htmlTags.types";
 import { ClassNames } from "../constants/types/classNames.types";
-import { appendChildren } from "../utilities/components.utilities";
-import { addClassNames, classNamesToArray } from "../utilities/style.utilities";
+import {
+  addClassNames,
+  classNamesToArray,
+} from "../utilities/components.utilities";
 import { CSSInterpolation, css } from "@emotion/css";
 
 type DataAttribute =
@@ -15,43 +17,48 @@ type DataAttribute =
 
 type DataAttributes = DataAttribute | DataAttribute[];
 
-export type Component = HTMLElement | SVGElement;
-export type Child = Component | string | CreateComponent<Component>;
-export type Children = TypeOrTypeArray<Child>;
+export type ElementComponent = HTMLElement | SVGElement;
+export type NormalComponent =
+  | ElementComponent
+  | CreateComponent<ElementComponent>;
+export type Component = NormalComponent | string;
+export type Components = TypeOrTypeArray<Component>;
 
-export type ComponentProps<ChildrenType extends Children = Children> = Partial<{
+export type ComponentProps<Props = {}> = Partial<{
   classNames: ClassNames;
   dataAttributes: DataAttributes;
   styles: CSSInterpolation;
-  children: ChildrenType;
-}>;
+}> &
+  Props;
 
-type Constructor<ChildrenType extends Children> = Partial<{
+type Constructor = Partial<{
   elementName: HtmlTags;
-  props: ComponentProps<ChildrenType>;
-}>;
-
-export type ComponentConstructor<
-  Options extends Object = {},
-  ChildrenType extends Children = Children
-> = Partial<{
-  options: Options;
-  props: ComponentProps<ChildrenType>;
+  props: ComponentProps;
+  component: CreateComponent<ElementComponent>;
 }>;
 
 abstract class CreateComponent<
-  ElementType extends Component = HTMLDivElement,
-  ChildrenType extends Children = Children
+  ElementType extends ElementComponent = HTMLDivElement
 > {
-  component: ElementType;
-  children: ComponentProps<ChildrenType>["children"];
-  private props: ComponentProps<ChildrenType>;
+  private _component: ElementType;
+  private props: ComponentProps;
 
-  constructor({ elementName = "div", props = {} }: Constructor<ChildrenType>) {
-    this.component = document.createElement(elementName) as ElementType;
+  constructor({
+    elementName = "div",
+    props = {},
+    component,
+  }: Constructor = {}) {
+    this._component = (
+      component != null
+        ? component.component
+        : document.createElement(elementName)
+    ) as ElementType;
     this.props = props;
-    this.children = props.children;
     this._addProps();
+  }
+
+  get component() {
+    return this._component;
   }
 
   protected abstract _create(): void;
@@ -69,10 +76,13 @@ abstract class CreateComponent<
       : null;
   }
 
+  protected addSpecificClassNames(classNames: ClassNames) {
+    addClassNames(this.component, classNames);
+  }
+
   private _addProps(): void {
     this._addClassNames();
     this._addDataAttributes();
-    appendChildren(this.component, this.children);
   }
 
   private _addClassNames(): void {
