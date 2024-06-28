@@ -1,5 +1,6 @@
 import CreateComponent, {
   Component,
+  ComponentProps,
   Components,
   ElementComponent,
   NormalComponent,
@@ -76,4 +77,24 @@ export function qs<Element extends ElementComponent = HTMLElement>(
       ? getElementComponent(element as NormalComponent)
       : element
   ).querySelector<Element>(query);
+}
+
+export function pickComponentProps<Options = {}>(
+  props: ComponentProps<Options>
+): {
+  props: ComponentProps | undefined;
+  options: Options;
+} {
+  const { classNames, dataAttributes, styles, ...restProps } = props || {};
+  return {
+    props:
+      classNames || dataAttributes || styles
+        ? {
+            classNames,
+            dataAttributes,
+            styles,
+          }
+        : undefined,
+    options: restProps as Options,
+  };
 }
