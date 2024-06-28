@@ -1,5 +1,3 @@
-import { Component } from "../components/Component";
-
 type InsertStringAtSpecificIndex = {
   string: string;
   substring: string;

@@ -1,12 +1,16 @@
 import { NormalComponent } from "../components/Component";
 import {
+  BORDER_RADIUS,
   DEFAULT_MODE,
+  FONT_SIZE,
   Mode,
   ModeExcludedSystem,
+  TRANSITION,
+  TRANSITION_EASING,
 } from "../constants/global/style.global";
-import { ClassNames } from "../constants/types/classNames.types";
 import { TypeOrTypeArray } from "../constants/types/utilities.types";
-import { setColors } from "./color.utilities";
+import { ClassNames } from "../constants/types/classNames.types";
+import { setColors, setModeColors } from "./color.utilities";
 import { insertStringAtSpecificIndex } from "./common.utilities";
 import {
   appendChild,
@@ -14,17 +18,100 @@ import {
   getElementComponent,
   qs,
 } from "./components.utilities";
-import { localStorageGetItem } from "./localStorage.utilities";
+import {
+  localStorageGetItem,
+  localStorageSetItem,
+} from "./localStorage.utilities";
 
 export function styleInitializer() {
   createStyleSheet();
   setColors();
+  setTransitions();
+  setFontSize();
+  setBorderRadius();
+  handleMode();
 }
 
 function createStyleSheet(): void {
   const styleSheet = document.createElement("style");
   styleSheet.dataset.styleSheet = "";
   appendChild(document.head, styleSheet);
+}
+
+type TransitionEasingKeys = keyof typeof TRANSITION_EASING;
+type TransitionKeys = keyof typeof TRANSITION;
+
+function setTransitions(): void {
+  Object.keys(TRANSITION_EASING).forEach((key) => {
+    setPropertiesToStyleSheet({
+      properties: {
+        key: `--${key}`,
+        value: TRANSITION_EASING[key as TransitionEasingKeys],
+      },
+    });
+  });
+
+  Object.keys(TRANSITION).forEach((key) => {
+    const properties: Properties = [
+      {
+        key: `--${key}-transition-time`,
+        value: `${TRANSITION[key as TransitionKeys].time}ms`,
+      },
+      {
+        key: `--${key}-transition`,
+        value: `var(--${key}-transition-time) var(--${
+          TRANSITION[key as TransitionKeys].easing
+        })`,
+      },
+    ];
+
+    setPropertiesToStyleSheet({ properties });
+  });
+}
+
+type FontSizeKeys = keyof typeof FONT_SIZE;
+
+function setFontSize(): void {
+  Object.keys(FONT_SIZE).forEach((key) => {
+    setPropertiesToStyleSheet({
+      properties: {
+        key: `--fs-${key}`,
+        value: `${FONT_SIZE[key as FontSizeKeys]}rem`,
+      },
+    });
+  });
+}
+
+function setBorderRadius(): void {
+  setPropertiesToStyleSheet({
+    properties: [
+      { key: "--rounded", value: `${BORDER_RADIUS.medium}rem` },
+      { key: "--rounded-large", value: `${BORDER_RADIUS.large}rem` },
+    ],
+  });
+}
+
+function handleMode(): void {
+  const mode = localStorageGetItem<Mode>("mode");
+  mode ? null : localStorageSetItem("mode", DEFAULT_MODE);
+  setModeToRoot();
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", (e) => {
+      const newMode: ModeExcludedSystem = e.matches ? "dark" : "light";
+      localStorageSetItem("mode", newMode);
+      setModeToRoot();
+    });
+}
+
+function setModeToRoot(): void {
+  document.documentElement.dataset.mode = getMode();
+}
+
+export function setMode(mode: ModeExcludedSystem): void {
+  localStorageSetItem("mode", mode);
+  (qs("[data-mode]") as HTMLHtmlElement).dataset.mode = mode;
+  setModeColors();
 }
 
 export function getMode(): ModeExcludedSystem {
@@ -61,6 +148,7 @@ export function setProperties({ element, properties }: SetProperties): void {
 
   elementComponent.style.setProperty(properties.key, properties.value);
 }
+
 type GetProperties<Keys> = {
   element: NormalComponent;
   keys: Keys;

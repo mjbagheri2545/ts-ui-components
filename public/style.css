@@ -120,16 +120,22 @@ h6 {
 .align-center {
   align-items: center;
 }
+.align-start {
+  align-items: flex-start;
+}
+.align-end {
+  align-items: flex-end;
+}
 .flex-justify-center {
   display: flex;
-  justify-content: center;
-}
-.justify-center {
   justify-content: center;
 }
 .flex-justify-space-between {
   display: flex;
   justify-content: space-between;
+}
+.justify-center {
+  justify-content: center;
 }
 .justify-space-between {
   justify-content: space-between;
@@ -205,11 +211,20 @@ h6 {
 }
 /***** End R *****/
 
-/***** T *****/
+/***** Text *****/
 .text-center {
   text-align: center;
 }
-/***** End T *****/
+.primary-text {
+  color: var(--text-primary);
+}
+.secondary-text {
+  color: var(--text-secondary);
+}
+.tertiary-text {
+  color: var(--text-tertiary);
+}
+/***** End Text *****/
 
 /***** Transition *****/
 .standard-transition {
