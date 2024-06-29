@@ -6,6 +6,8 @@ import CreateComponent, {
   NormalComponent,
 } from "../components/Component";
 import { ClassName, ClassNames } from "../constants/types/classNames.types";
+import { Size } from "../constants/types/utilities.types";
+import { Properties, setProperties } from "./style.utilities";
 
 export function isCreateComponent(
   component: Component | unknown
@@ -97,4 +99,35 @@ export function pickComponentProps<Options = {}>(
         : undefined,
     options: restProps as Options,
   };
+}
+
+export function addConditionalClassNames(
+  classNames: ClassNames,
+  condition?: boolean
+): (ClassName | undefined)[] {
+  if (classNames == null) return [];
+  return condition
+    ? typeof classNames === "string"
+      ? [classNames]
+      : classNames
+    : [];
+}
+
+export function addSizeClassName(
+  size?: Size | "x-large"
+): (ClassName | undefined)[] {
+  return addConditionalClassNames(
+    [size as Size, size !== "medium" ? "size" : ""],
+    size != null
+  );
+}
+
+export function addConditionalProperties(
+  component: NormalComponent,
+  properties: Properties,
+  condition: boolean
+) {
+  if (condition) {
+    setProperties({ element: component, properties });
+  }
 }

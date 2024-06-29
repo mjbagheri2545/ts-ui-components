@@ -1,0 +1,36 @@
+.ButtonBase {
+  background-color: var(--color);
+  color: var(--text-color);
+}
+.Ripples {
+  pointer-events: none;
+  border-radius: inherit;
+  inset: 0;
+}
+.Ripples .Ripples-body {
+  top: var(--top);
+  left: var(--left);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  animation: ripples var(--ripples-animation-duration) linear;
+}
+.ButtonBase.isLoading {
+  pointer-events: none;
+  background-color: var(--disabled) !important;
+  border: none !important;
+}
+
+.ButtonBase.size {
+  scale: var(--scale);
+}
+
+@keyframes ripples {
+  0% {
+    width: 0;
+    opacity: 0.45;
+  }
+  100% {
+    width: 150%;
+    opacity: 0;
+  }
+}
