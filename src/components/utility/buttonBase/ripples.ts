@@ -25,7 +25,7 @@ class Ripples extends CreateComponent<HTMLSpanElement> {
     super({
       component: new Box({
         elementName: "span",
-        dataAttributes: "ripplesRoot",
+        dataAttributes: "ripples",
       }),
     });
   }

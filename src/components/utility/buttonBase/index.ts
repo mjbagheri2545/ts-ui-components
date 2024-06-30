@@ -1,4 +1,4 @@
-import { ColorKeys } from "../../../constants/global/color.global";
+import { Colors } from "../../../constants/global/color.global";
 import { Size } from "../../../constants/types/utilities.types";
 import {
   addConditionalProperties,
@@ -17,8 +17,9 @@ function getScaleSize(size: Exclude<Size, "medium">) {
 }
 
 export type ButtonBaseProps = Partial<{
-  color: ColorKeys | "light" | "dark";
+  color: Colors;
   size: Size;
+  variant: "filled" | "outlined";
 }>;
 
 abstract class ButtonBase extends CreateComponent<HTMLButtonElement> {
@@ -40,6 +41,7 @@ abstract class ButtonBase extends CreateComponent<HTMLButtonElement> {
       "flex-center",
       "standard-transition",
       "position-relative",
+      "component-text-color",
       ...addSizeClassName(this.options.size),
       this.options.color,
     ]);

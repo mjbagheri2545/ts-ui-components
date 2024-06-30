@@ -4,8 +4,8 @@ import {
   MODE_COLORS,
   PaletteColors,
   ModeColors,
-  COLORS_KEYS,
-  ExcludedColorKeys,
+  MAIN_COLORS,
+  ExcludedMainColors,
   HEX,
   HSL,
   RGB,
@@ -107,7 +107,7 @@ export function setModeColors(
 }
 
 function setComponentColors(): void {
-  COLORS_KEYS.forEach((colorKey) => {
+  MAIN_COLORS.forEach((colorKey) => {
     const properties: Properties = [
       { key: "--color", value: `var(--${colorKey})` },
       { key: "--color-dark", value: `var(--${colorKey}-dark)` },
@@ -147,11 +147,11 @@ function getPaletteColors(): PaletteColors {
   const palette: Partial<PaletteColors> = {};
   Object.keys(PALETTE_COLORS).forEach((key) => {
     if (
-      COLORS_KEYS.includes(key as ExcludedColorKeys) &&
+      MAIN_COLORS.includes(key as ExcludedMainColors) &&
       !isPrimarySecondary(key)
     ) {
-      const tokenColor = PALETTE_COLORS[key as ExcludedColorKeys];
-      palette[key as ExcludedColorKeys] = {
+      const tokenColor = PALETTE_COLORS[key as ExcludedMainColors];
+      palette[key as ExcludedMainColors] = {
         ...tokenColor,
         ...(tokenColor.dark != null
           ? {}

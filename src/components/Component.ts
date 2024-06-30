@@ -1,10 +1,11 @@
-import { ColorKeys } from "../constants/global/color.global";
+import { MainColors } from "../constants/global/color.global";
 import { TypeOrTypeArray } from "../constants/types/utilities.types";
 import HtmlTags from "../constants/types/htmlTags.types";
 import { ClassNames } from "../constants/types/classNames.types";
 import {
   addClassNames,
   classNamesToArray,
+  getElementComponent,
 } from "../utilities/components.utilities";
 import { CSSInterpolation, css } from "@emotion/css";
 
@@ -58,14 +59,14 @@ abstract class CreateComponent<
   }
 
   get component() {
-    return this._component;
+    return getElementComponent(this._component) as ElementType;
   }
 
   protected abstract _create(): void;
 
-  protected _setColor<Colors = ColorKeys>(
-    colorToSet?: Colors,
-    colorToRemove?: Colors
+  protected _setColor<ColorsParams = MainColors>(
+    colorToSet?: ColorsParams,
+    colorToRemove?: ColorsParams
   ) {
     if (colorToSet === colorToRemove) return;
     colorToRemove != null
@@ -91,7 +92,7 @@ abstract class CreateComponent<
     const classNamesToAdd = [
       "Component",
       ...(styles != null ? [css(styles)] : []),
-      ...(classNames == null ? [] : classNamesToArray(classNames)),
+      ...classNamesToArray(classNames),
     ];
 
     addClassNames(this.component, classNamesToAdd);

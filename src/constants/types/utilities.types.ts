@@ -1,4 +1,4 @@
 export type TypeOrTypeArray<T> = T | T[];
 
-export type Size = "small" | "medium" | "large";
-
+export const SIZES = ["small", "medium", "large"] as const;
+export type Size = (typeof SIZES)[number];

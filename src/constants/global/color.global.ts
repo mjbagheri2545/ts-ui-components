@@ -25,7 +25,7 @@ export type CSSHSL =
 
 export type CSSColor = HEX | CSSRGB | CSSHSL;
 
-export const COLORS_KEYS = [
+export const MAIN_COLORS = [
   "primary",
   "secondary",
   "success",
@@ -37,8 +37,11 @@ export const COLORS_KEYS = [
   "orange",
 ] as const;
 
-export type ColorKeys = (typeof COLORS_KEYS)[number];
-export type ExcludedColorKeys = Exclude<ColorKeys, "primary" | "secondary">;
+export type MainColors = (typeof MAIN_COLORS)[number];
+export type ExcludedMainColors = Exclude<MainColors, "primary" | "secondary">;
+
+export const COLORS = [...MAIN_COLORS, "light", "dark"] as const;
+export type Colors = MainColors | "light" | "dark";
 
 type LightAndDark = {
   white: CSSColor;
@@ -62,12 +65,12 @@ export type PaletteColor = Readonly<{
 }>;
 
 export type PaletteColors = {
-  [Key in ExcludedColorKeys]: PaletteColor;
+  [Key in ExcludedMainColors]: PaletteColor;
 } & {
-  readonly lightAndDark: LightAndDark;
+  lightAndDark: LightAndDark;
 } & {
-  readonly primary: ExcludedColorKeys;
-  readonly secondary: ExcludedColorKeys;
+  readonly primary: ExcludedMainColors;
+  readonly secondary: ExcludedMainColors;
 };
 
 export const PALETTE_COLORS: PaletteColors = {
@@ -87,7 +90,7 @@ export const PALETTE_COLORS: PaletteColors = {
     lightenAmount: 0.11,
   },
   error: {
-    main: "#b00000",
+    main: "#b00020",
     text: "light",
   },
   purple: {
@@ -117,23 +120,27 @@ export const PALETTE_COLORS: PaletteColors = {
 
 Object.freeze(PALETTE_COLORS);
 
-type GreyColorKeys = "pure" | "primary" | "one" | "two" | "three" | "four";
+type GreyMainColors = "pure" | "primary" | "one" | "two" | "three" | "four";
 
-export type ModeColors = Readonly<{
-  grey: {
-    [Key in GreyColorKeys]: CssColorOrLightAndDark;
-  };
-  text: {
-    primary: CssColorOrLightAndDark;
-    secondary: CssColorOrLightAndDark;
-    tertiary: CssColorOrLightAndDark;
-  };
-  actions: {
-    disabled: CSSColor;
-    "hover-opacity": number;
-    "focus-opacity": number;
-  };
+type ModeColorsText = Readonly<{
+  primary: CssColorOrLightAndDark;
+  secondary: CssColorOrLightAndDark;
+  tertiary: CssColorOrLightAndDark;
 }>;
+
+type ModeColorsActions = Readonly<{
+  disabled: CSSColor;
+  "hover-opacity": number;
+  "focus-opacity": number;
+}>;
+
+export type ModeColors = {
+  grey: {
+    readonly [Key in GreyMainColors]: CssColorOrLightAndDark;
+  };
+  text: ModeColorsText;
+  actions: ModeColorsActions;
+};
 
 export type ModeColorsKey = {
   [key in ModeExcludedSystem]: ModeColors;
