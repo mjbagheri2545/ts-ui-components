@@ -1,0 +1,55 @@
+.Button {
+  padding: 0.7rem 1.6rem;
+  text-transform: capitalize;
+  font-size: var(--fs-large);
+}
+.Button.large {
+  font-size: var(--fs-larger-1);
+}
+.Button.small {
+  font-size: var(--fs-medium);
+}
+.Button.isLoading {
+  pointer-events: none;
+  background-color: var(--disabled) !important;
+  border: none !important;
+}
+.Button.isLoading *:not(.Spinner) {
+  visibility: hidden;
+  opacity: 0;
+}
+.Button.shadow::before {
+  transition: none;
+}
+.Button.shadow:not(.isLoading)::before {
+  transition: var(--standard-transition);
+}
+.Button.shadow.isLoading::before {
+  visibility: hidden;
+  opacity: 0;
+}
+.Button.filled .Ripples-body {
+  background-color: var(--white);
+}
+.Button.outlined {
+  background-color: transparent;
+  border: 2px solid var(--color);
+  color: var(--color);
+}
+.Button.outlined:hover {
+  background-color: hsla(var(--color-channel), 0.075);
+  box-shadow: 0 0 0 1px var(--color),
+    0 0 1rem 0.25rem hsla(var(--color-channel), 0.225);
+}
+.Button.text {
+  background-color: hsla(var(--color-channel), 0.05);
+  color: var(--color);
+  border-radius: var(--rounded);
+}
+.Button.text:hover {
+  background-color: hsla(var(--color-channel), 0.125);
+}
+.Button.outlined .Ripples-body,
+.Button.text .Ripples-body {
+  background-color: hsla(var(--color-channel), 0.85);
+}

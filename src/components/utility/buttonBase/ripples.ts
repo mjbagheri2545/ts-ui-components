@@ -28,6 +28,7 @@ class Ripples extends CreateComponent<HTMLSpanElement> {
         dataAttributes: "ripples",
       }),
     });
+    this._create()
   }
 
   protected _create() {
@@ -63,10 +64,7 @@ class Ripples extends CreateComponent<HTMLSpanElement> {
 
     setProperties({ element: ripples, properties });
 
-    appendChild(
-      qs("[data-ripples]", component) as ElementComponent,
-      ripples
-    );
+    appendChild(qs("[data-ripples]", component)!, ripples);
 
     setTimeout(() => {
       ripples.component.remove();

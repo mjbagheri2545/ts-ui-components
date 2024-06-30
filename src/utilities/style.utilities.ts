@@ -110,7 +110,7 @@ function setModeToRoot(): void {
 
 export function setMode(mode: ModeExcludedSystem): void {
   localStorageSetItem("mode", mode);
-  (qs("[data-mode]") as HTMLHtmlElement).dataset.mode = mode;
+  qs("[data-mode]")!.dataset.mode = mode;
   setModeColors();
 }
 
@@ -202,7 +202,7 @@ export function setPropertiesToStyleSheet({
   classNames = "",
   isDefaultSelectorNeed = true,
 }: SetPropertiesToStyleSheet) {
-  const styleSheet = qs("[data-style-sheet]") as HTMLStyleElement;
+  const styleSheet = qs<HTMLStyleElement>("[data-style-sheet]")!;
 
   let formattedProperties = "";
 

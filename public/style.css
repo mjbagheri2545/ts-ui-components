@@ -41,6 +41,15 @@ body {
   overflow: hidden;
   background-color: var(--grey-pure);
   transition: var(--standard-transition);
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 ul,

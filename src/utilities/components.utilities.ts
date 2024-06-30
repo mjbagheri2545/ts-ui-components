@@ -53,6 +53,13 @@ export function appendChild(component: NormalComponent, child: Component) {
   );
 }
 
+export function render(
+  componentToRender: Component,
+  parentComponent: NormalComponent = qs("[data-app]")!
+) {
+  appendChild(parentComponent, componentToRender);
+}
+
 export function addClassNames(
   element: NormalComponent,
   classNames: ClassNames

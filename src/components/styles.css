@@ -1,3 +1,6 @@
+@import url("./utility/buttonBase/style.css");
+@import url("./utility/button/style.css");
+
 .Component.light {
   --color: var(--light);
   --color-channel: var(--light-channel);
