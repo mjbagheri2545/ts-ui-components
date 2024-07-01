@@ -1,0 +1,45 @@
+.Fab {
+  right: 2.5rem;
+  bottom: 2.5rem;
+}
+
+.Fab.left {
+  right: auto;
+  left: 2.5rem;
+}
+
+.Fab.sharp-top {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+
+.Fab.sharp-bottom {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.Fab.sharp-right {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.Fab.sharp-left {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.Fab.sharp-top-left {
+  border-top-left-radius: 0;
+}
+
+.Fab.sharp-top-right {
+  border-top-right-radius: 0;
+}
+
+.Fab.sharp-bottom-left {
+  border-bottom-left-radius: 0;
+}
+
+.Fab.sharp-bottom-right {
+  border-bottom-right-radius: 0;
+}

@@ -1,5 +1,8 @@
 @import url("./utility/buttonBase/style.css");
 @import url("./utility/button/style.css");
+@import url("./utility/icon/style.css");
+@import url("./utility/iconButton/style.css");
+@import url("./utility/fab/style.css");
 
 .Component.light {
   --color: var(--light);

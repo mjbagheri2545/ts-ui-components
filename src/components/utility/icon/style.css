@@ -1,0 +1,14 @@
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.Icon {
+  --color: var(--dark);
+  color: var(--color);
+}
+
+.Icon.size {
+  font-size: var(--size);
+}

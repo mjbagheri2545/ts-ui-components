@@ -67,7 +67,7 @@ class Button extends ButtonBase {
   protected _addRipples(): void {
     appendChild(this.component, new Ripples());
 
-    this.component.addEventListener("click", (e) => {
+    this.component.addEventListener("click", (e: MouseEvent) => {
       const scaleFactor =
         this.options.size === "medium"
           ? 1

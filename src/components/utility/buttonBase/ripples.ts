@@ -28,7 +28,7 @@ class Ripples extends CreateComponent<HTMLSpanElement> {
         dataAttributes: "ripples",
       }),
     });
-    this._create()
+    this._create();
   }
 
   protected _create() {

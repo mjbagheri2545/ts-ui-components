@@ -1,0 +1,40 @@
+.IconButton {
+  --hover-scale: 0.04;
+  padding: 0.75rem;
+}
+.IconButton:not(.filled) {
+  background-color: transparent;
+  color: var(--color);
+}
+.IconButton.filled .Icon {
+  --color: var(--text-color);
+}
+.IconButton:hover:not(.filled) {
+  background-color: hsla(var(--color-channel), 0.12);
+}
+.IconButton.filled:hover {
+  transform: scale(calc(1 + var(--hover-scale)));
+}
+.IconButton.button-shadow::before {
+  top: 16%;
+  filter: blur(0.325rem);
+}
+[data-mode="dark"] .IconButton.button-shadow::before {
+  top: 12%;
+}
+.ButtonBase.IconButton .Ripples-body {
+  --top: 50%;
+  --left: 50%;
+  background-color: var(--color);
+  top: var(--top);
+  left: var(--left);
+}
+.ButtonBase.IconButton.filled .Ripples-body {
+  background-color: var(--white);
+}
+.ButtonBase.IconButton.size {
+  transform: scale(var(--scale));
+}
+.ButtonBase.IconButton.size:hover {
+  transform: scale(calc(var(--scale) + var(--hover-scale)));
+}
