@@ -1,0 +1,29 @@
+.Link {
+  color: var(--info);
+  font-size: var(--fs-large);
+  padding: 0.4rem 0.7rem;
+}
+.Link:visited,
+.Link:active {
+  filter: hue-rotate(30deg);
+}
+.Link::before {
+  content: " ";
+  position: absolute;
+  top: 90%;
+  left: 0;
+  width: 0;
+  height: 0.15rem;
+  background-color: var(--info);
+  border-radius: var(--rounded);
+  transition: var(--standard-transition);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateX(-100%);
+}
+.Link:hover::before {
+  visibility: visible;
+  opacity: 1;
+  width: 100%;
+  transform: translateX(0);
+}

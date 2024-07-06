@@ -1,12 +1,20 @@
 import {
+  addConditionalClassNames,
   appendChild,
   pickComponentProps,
+  qs,
 } from "../../../utilities/components.utilities";
 import { getProperties } from "../../../utilities/style.utilities";
-import { Component, ComponentProps, Components } from "../../Component";
+import {
+  Component,
+  ComponentProps,
+  Components,
+  ElementComponent,
+} from "../../Component";
 import Box from "../box";
 import ButtonBase, { ButtonBaseProps } from "../buttonBase";
 import Ripples from "../buttonBase/ripples";
+import Spinner from "../spinner";
 
 export type ButtonProps = Omit<ButtonBaseProps, "variant"> &
   Partial<{
@@ -15,6 +23,7 @@ export type ButtonProps = Omit<ButtonBaseProps, "variant"> &
   }>;
 
 class Button extends ButtonBase {
+  private _isLoading: boolean = false;
   private _options: ButtonProps = { variant: "filled" };
 
   constructor(
@@ -32,15 +41,43 @@ class Button extends ButtonBase {
     this._create();
   }
 
+  get isLoading() {
+    return this._isLoading;
+  }
+
+  set isLoading(value: boolean) {
+    if (value === this.isLoading) return;
+    this._isLoading = value;
+    this.component.classList[value ? "add" : "remove"]("isLoading");
+    if (value) {
+      const componentHeight = parseFloat(
+        getComputedStyle(this.component).height
+      );
+      const spinner = new Spinner({
+        size: componentHeight * 0.75,
+        dataAttributes: "buttonSpinner",
+        classNames: "position-absolute",
+      });
+      appendChild(this.component, spinner.component);
+    } else {
+      this.component.removeChild(
+        qs("[data-button-spinner]", this.component) as ElementComponent
+      );
+    }
+  }
+
   protected _create(): void {
     this._appendChildren();
     this._addRipples();
     this.addSpecificClassNames([
       "Button",
       "rounded",
-      "button-shadow",
       this._options.variant,
       this._options.isFullWidth ? "width-100" : "",
+      ...addConditionalClassNames(
+        "button-shadow",
+        this._options.variant === "filled"
+      ),
     ]);
   }
 
@@ -55,7 +92,7 @@ class Button extends ButtonBase {
   private _appendChild(child: Component) {
     if (typeof child === "string") {
       const box = new Box<HTMLSpanElement>({
-        classNames: "text",
+        classNames: ["text", "standard-transition"],
         elementName: "span",
       });
       appendChild(box.component, child);

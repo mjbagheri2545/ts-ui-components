@@ -38,8 +38,8 @@
 }
 .Button.outlined:hover {
   background-color: hsla(var(--color-channel), 0.075);
-  box-shadow: 0 0 0 1px var(--color),
-    0 0 1rem 0.25rem hsla(var(--color-channel), 0.225);
+  /* box-shadow: 0 0 0 1px var(--color),
+    0 0 1rem 0.25rem hsla(var(--color-channel), 0.225); */
 }
 .Button.text {
   background-color: hsla(var(--color-channel), 0.05);
