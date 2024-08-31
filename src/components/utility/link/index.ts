@@ -1,19 +1,21 @@
-import { appendChildren } from "../../../utilities/components.utilities";
 import CreateComponent, { ComponentProps, Components } from "../../Component";
 
-export type LinkConstructorParams = { children: Components; href: string };
+type PropsWithHref = { children: Components; href: string };
+
+function isHrefProvided(params: any): params is PropsWithHref {
+  return typeof params?.href === "string";
+}
+
+export type LinkConstructorParams = PropsWithHref | Components;
 
 class Link extends CreateComponent<HTMLAnchorElement> {
-  private _children: LinkConstructorParams["children"];
-  private _href: LinkConstructorParams["href"];
+  private _children: Components;
 
-  constructor(
-    { children, href }: LinkConstructorParams,
-    linkProps: ComponentProps = {}
-  ) {
+  constructor(params: LinkConstructorParams, linkProps: ComponentProps = {}) {
     super({ elementName: "a", props: linkProps });
-    this._children = children;
-    this._href = href;
+    const isHrefProvidedInParams = isHrefProvided(params);
+    this._children = isHrefProvidedInParams ? params.children : params;
+    this.component.href = isHrefProvidedInParams ? params.href : "/";
     this._create();
   }
 
@@ -27,12 +29,7 @@ class Link extends CreateComponent<HTMLAnchorElement> {
       "overflow-hidden",
     ]);
 
-    appendChildren(this.component, this._children);
-
-    this.component.addEventListener("click", (e) => {
-      e.preventDefault();
-      window.history.pushState(null, "", this._href);
-    });
+    this.appendChildren(this._children);
   }
 }
 

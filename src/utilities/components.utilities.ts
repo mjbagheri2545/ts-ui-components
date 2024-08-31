@@ -5,8 +5,8 @@ import CreateComponent, {
   ElementComponent,
   NormalComponent,
 } from "../components/Component";
-import { ClassName, ClassNames } from "../constants/types/classNames.types";
 import { Size } from "../constants/types/utilities.types";
+import { ClassName, ClassNames } from "../constants/types/classNames.types";
 import { Properties, setProperties } from "./style.utilities";
 
 export function isCreateComponent(
@@ -53,11 +53,15 @@ export function appendChild(component: NormalComponent, child: Component) {
   );
 }
 
-export function render(
-  componentToRender: Component,
-  parentComponent: NormalComponent = qs("[data-app]")!
-) {
-  appendChild(parentComponent, componentToRender);
+export function qs<Element extends ElementComponent = HTMLElement>(
+  query: string,
+  element: NormalComponent | Document = document
+): Element | null {
+  return (
+    element !== document
+      ? getElementComponent(element as NormalComponent)
+      : element
+  ).querySelector<Element>(query);
 }
 
 export function addClassNames(
@@ -77,37 +81,6 @@ export function classNamesToArray(classNames: ClassNames): ClassName[] {
   return classNames == null ? [] : classNames.split(" ");
 }
 
-export function qs<Element extends ElementComponent = HTMLElement>(
-  query: string,
-  element: NormalComponent | Document = document
-): Element | null {
-  return (
-    element !== document
-      ? getElementComponent(element as NormalComponent)
-      : element
-  ).querySelector<Element>(query);
-}
-
-export function pickComponentProps<Options = {}>(
-  props: ComponentProps<Options>
-): {
-  props: ComponentProps | undefined;
-  options: Options;
-} {
-  const { classNames, dataAttributes, styles, ...restProps } = props || {};
-  return {
-    props:
-      classNames || dataAttributes || styles
-        ? {
-            classNames,
-            dataAttributes,
-            styles,
-          }
-        : undefined,
-    options: restProps as Options,
-  };
-}
-
 export function addConditionalClassNames(
   classNames: ClassNames,
   condition?: boolean
@@ -124,7 +97,7 @@ export function addSizeClassName(
   size?: Size | "x-large"
 ): (ClassName | undefined)[] {
   return addConditionalClassNames(
-    [size as Size, size !== "medium" ? "size" : ""],
+    [size, size !== "medium" ? "size" : ""],
     size != null
   );
 }
@@ -137,4 +110,30 @@ export function addConditionalProperties(
   if (condition) {
     setProperties({ element: component, properties });
   }
+}
+
+type PickComponentProps<Options> = {
+  props: ComponentProps | undefined;
+  options: Options;
+};
+
+export function pickComponentProps<Options = {}>(
+  props: ComponentProps<Options>
+): PickComponentProps<Options> {
+  const { classNames, dataAttributes, styles, ...restProps } = props || {};
+  return {
+    props:
+      classNames || dataAttributes || styles
+        ? {
+            classNames,
+            dataAttributes,
+            styles,
+          }
+        : undefined,
+    options: restProps as Options,
+  };
+}
+
+export function render(component: NormalComponent) {
+  appendChild(qs("[data-app]")!, component);
 }

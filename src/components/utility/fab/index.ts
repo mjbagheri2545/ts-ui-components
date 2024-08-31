@@ -1,7 +1,8 @@
 import { pickComponentProps } from "../../../utilities/components.utilities";
 import CreateComponent, { ComponentProps } from "../../Component";
 import { ButtonBaseProps } from "../buttonBase";
-import IconButton, { IconButtonChildren } from "../iconButton";
+import Icon from "../icon";
+import IconButton from "../iconButton";
 
 export const FAB_SHARP_POSITIONS = [
   "none",
@@ -28,7 +29,7 @@ class Fab extends CreateComponent<HTMLButtonElement> {
   private _iconButton: IconButton;
 
   constructor(
-    _icon: IconButtonChildren,
+    _icon: Icon,
     fabProps: ComponentProps<FabProps> = {}
   ) {
     const { options } = pickComponentProps(fabProps);

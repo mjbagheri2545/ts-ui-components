@@ -1,4 +1,7 @@
 import { NormalComponent } from "../components/Component";
+import toastContainer, {
+  ToastContainer,
+} from "../components/utility/toast/ToastContainer";
 import {
   BORDER_RADIUS,
   DEFAULT_MODE,
@@ -18,10 +21,7 @@ import {
   getElementComponent,
   qs,
 } from "./components.utilities";
-import {
-  localStorageGetItem,
-  localStorageSetItem,
-} from "./localStorage.utilities";
+import { localStorageGetItem, localStorageSetItem } from "./localstorage.utilities";
 
 export function styleInitializer() {
   createStyleSheet();
@@ -30,6 +30,7 @@ export function styleInitializer() {
   setFontSize();
   setBorderRadius();
   handleMode();
+  addToastContainer(toastContainer);
 }
 
 function createStyleSheet(): void {
@@ -104,13 +105,17 @@ function handleMode(): void {
     });
 }
 
+export function addToastContainer(toastContainer: ToastContainer): void {
+  appendChild(qs("[data-app]") as HTMLElement, toastContainer);
+}
+
 function setModeToRoot(): void {
   document.documentElement.dataset.mode = getMode();
 }
 
 export function setMode(mode: ModeExcludedSystem): void {
   localStorageSetItem("mode", mode);
-  qs("[data-mode]")!.dataset.mode = mode;
+  (qs("[data-mode]") as HTMLHtmlElement).dataset.mode = mode;
   setModeColors();
 }
 
@@ -123,6 +128,12 @@ export function getMode(): ModeExcludedSystem {
     return "light";
   }
   return mode;
+}
+
+export function getOppositeMode(
+  mode: ModeExcludedSystem = getMode()
+): ModeExcludedSystem {
+  return mode === "dark" ? "light" : "dark";
 }
 
 export type Property = {
@@ -202,7 +213,7 @@ export function setPropertiesToStyleSheet({
   classNames = "",
   isDefaultSelectorNeed = true,
 }: SetPropertiesToStyleSheet) {
-  const styleSheet = qs<HTMLStyleElement>("[data-style-sheet]")!;
+  const styleSheet = qs("[data-style-sheet]") as HTMLStyleElement;
 
   let formattedProperties = "";
 

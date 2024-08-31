@@ -28,13 +28,13 @@ export type CSSColor = HEX | CSSRGB | CSSHSL;
 export const MAIN_COLORS = [
   "primary",
   "secondary",
-  "success",
   "info",
+  "success",
   "warning",
+  "orange",
   "error",
   "purple",
   "blue",
-  "orange",
 ] as const;
 
 export type MainColors = (typeof MAIN_COLORS)[number];
@@ -120,7 +120,7 @@ export const PALETTE_COLORS: PaletteColors = {
 
 Object.freeze(PALETTE_COLORS);
 
-type GreyMainColors = "pure" | "primary" | "one" | "two" | "three" | "four";
+type GreyMainColors = "primary" | "one" | "two" | "three" | "four";
 
 type ModeColorsText = Readonly<{
   primary: CssColorOrLightAndDark;
@@ -149,12 +149,11 @@ export type ModeColorsKey = {
 export const MODE_COLORS: ModeColorsKey = {
   light: {
     grey: {
-      pure: "white",
       primary: "light",
-      one: "#f0f0f0",
-      two: "#ededed",
-      three: "#eaeaea",
-      four: "#e7e7e7",
+      one: "#eceff1",
+      two: "#cfd8dc",
+      three: "#b0bec5",
+      four: "#90a4ae",
     },
     text: {
       primary: "dark",
@@ -169,12 +168,11 @@ export const MODE_COLORS: ModeColorsKey = {
   },
   dark: {
     grey: {
-      pure: "black",
       primary: "dark",
-      one: "#151515",
-      two: "#181818",
-      three: "#212121",
-      four: "#242424",
+      one: "#263238",
+      two: "#37474f",
+      three: "#455a64",
+      four: "#546e7a",
     },
     text: {
       primary: "light",

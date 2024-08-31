@@ -1,4 +1,4 @@
-import { MainColors } from "../../../constants/global/color.global";
+import { Colors } from "../../../constants/global/color.global";
 import {
   addConditionalProperties,
   pickComponentProps,
@@ -7,17 +7,18 @@ import CreateComponent, { ComponentProps } from "../../Component";
 
 export type SpinnerProps = Partial<{
   size: number;
-  color: MainColors | "light";
+  color: Colors;
   strokeWidth: number;
+  animationDuration: number;
 }>;
 
 class Spinner extends CreateComponent<HTMLSpanElement> {
-  private options: SpinnerProps;
+  private options: SpinnerProps = { color: "primary" };
 
   constructor(spinnerProps: ComponentProps<SpinnerProps> = {}) {
     const { props, options } = pickComponentProps(spinnerProps);
     super({ elementName: "span", props });
-    this.options = options;
+    this.options = { ...this.options, ...options };
     this._create();
   }
 
@@ -51,6 +52,14 @@ class Spinner extends CreateComponent<HTMLSpanElement> {
         value: `${this.options.strokeWidth}px`,
       },
       this.options.strokeWidth != null
+    );
+    addConditionalProperties(
+      this.component,
+      {
+        key: "--animation-duration",
+        value: `${this.options.animationDuration}ms`,
+      },
+      this.options.animationDuration != null
     );
   }
 }

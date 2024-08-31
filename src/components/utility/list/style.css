@@ -1,0 +1,7 @@
+.List {
+  --row-gap: 1rem;
+  --column-gap: 1rem;
+  gap: var(--row-gap) var(--column-gap);
+  padding: 1rem;
+  list-style: none;
+}

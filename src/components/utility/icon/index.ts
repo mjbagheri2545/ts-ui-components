@@ -11,6 +11,7 @@ import {
   pickComponentProps,
 } from "../../../utilities/components.utilities";
 import CreateComponent, { ComponentProps } from "../../Component";
+import { getMode } from "../../../utilities/style.utilities";
 
 const ICON_SIZE = {
   small: "18px",
@@ -18,15 +19,12 @@ const ICON_SIZE = {
   "x-large": "48px",
 };
 
-function getIconClassName<IsNewIcon extends boolean>(
-  type: IconProps<IsNewIcon>["type"],
-  isNewIcon: boolean
-) {
+function getIconClassName(type: IconProps["type"], isOldIcon?: boolean) {
   switch (type) {
     case "filled":
       return "";
     case "rounded":
-      return isNewIcon ? "rounded" : "round";
+      return isOldIcon ? "round" : "rounded";
     case "twoTone":
       return "two-tone";
   }
@@ -39,40 +37,49 @@ function getIconSize(size: GetIconSize) {
   return ICON_SIZE[size];
 }
 
-type NewIconType = "outlined" | "rounded" | "sharp";
-type OldIconType = NewIconType | "twoTone" | "filled";
+export const NEW_ICON_TYPES = ["outlined", "rounded", "sharp"] as const;
+export const OLD_ICON_TYPES = [...NEW_ICON_TYPES, "twoTone", "filled"] as const;
 
-export type IconProps<IsNewIcon extends boolean = true> = Partial<{
-  type: IsNewIcon extends true ? NewIconType : OldIconType;
-  isNewIcon: boolean;
-  color: Colors;
-  size: Size | "x-large";
-}>;
+type NewIconType = (typeof NEW_ICON_TYPES)[number];
+type OldIconType = (typeof OLD_ICON_TYPES)[number];
 
-export type IconChildren<IsNewIcon extends boolean = true> =
-  | (IsNewIcon extends true ? MaterialNewIcons : MaterialOldIcons)
-  | (string & {});
+type NewIconProps = {
+  isOldIcon?: false;
+  type?: NewIconType;
+  iconName: MaterialNewIcons | (string & {});
+};
 
-class Icon<
-  IsNewIcon extends boolean = true
-> extends CreateComponent<HTMLSpanElement> {
-  private options: IconProps<IsNewIcon> = {
+type OldIconProps = {
+  isOldIcon: true;
+  type?: OldIconType;
+  iconName: MaterialOldIcons | (string & {});
+};
+
+export type IconProps = {
+  color?: Colors;
+  size?: Size | "x-large";
+} & (NewIconProps | OldIconProps);
+
+class Icon extends CreateComponent<HTMLSpanElement> {
+  private options: Omit<IconProps, "iconName"> = {
     type: "rounded",
-    isNewIcon: true,
     size: "medium",
   };
+  iconName: IconProps["iconName"];
 
-  constructor(
-    public iconName: IconChildren<IsNewIcon>,
-    iconProps: ComponentProps<IconProps<IsNewIcon>> = {}
-  ) {
+  constructor(iconProps: ComponentProps<IconProps>) {
     const { props, options } = pickComponentProps(iconProps);
     super({ elementName: "span", props: props });
-    this.options = { ...this.options, ...options };
+    this.options = {
+      ...this.options,
+      ...(getMode() === "dark" ? { color: "light" } : {}),
+      ...options,
+    };
+    this.iconName = options.iconName;
     this._create();
   }
 
-  setIcon(iconName: IconChildren<IsNewIcon>, isAnimationNeed: boolean = true) {
+  setIcon(iconName: IconProps["iconName"], isAnimationNeed: boolean = true) {
     this.iconName = iconName;
     if (!isAnimationNeed) return;
 
@@ -87,8 +94,8 @@ class Icon<
     }, TRANSITION.leaving.time);
   }
 
-  setColor(color: IconProps<IsNewIcon>["color"]) {
-    this._setColor<IconProps<IsNewIcon>["color"]>(color, this.options.color);
+  setColor(color: IconProps["color"]) {
+    this._setColor<IconProps["color"]>(color, this.options.color);
     this.options.color = color;
   }
 
@@ -107,16 +114,16 @@ class Icon<
   }
 
   private _addSpecificClassNames() {
-    const className = getIconClassName<IsNewIcon>(
+    const className = getIconClassName(
       this.options.type,
-      this.options.isNewIcon as boolean
+      this.options.isOldIcon
     );
 
     this.addSpecificClassNames([
       "Icon",
       "rounded-circle",
       "flex-center",
-      `material-${this.options.isNewIcon ? "symbols" : "icons"}${
+      `material-${this.options.isOldIcon ? "icons" : "symbols"}${
         className!.length > 0 ? `-${className}` : ""
       }`,
       this.options.color,

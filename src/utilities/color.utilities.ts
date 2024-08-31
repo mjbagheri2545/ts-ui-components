@@ -43,6 +43,10 @@ function isPrimarySecondary(key: string): boolean {
   return ["primary", "secondary"].includes(key);
 }
 
+// in the below you will see as any, i don't know why typescript does not recognize type!
+// in the test of this project in other folder in my laptop it work correctly. i don't know why this
+// happened here.
+
 function setPaletteColors(
   colors: SetColor_Colors = getPaletteColors(),
   colorKey: SetColor_ColorKey = ""
@@ -54,7 +58,7 @@ function setPaletteColors(
       setPropertiesToStyleSheet({
         properties: {
           key: `--${colorKey}-text`,
-          value: getTextColorValue(colors[key]),
+          value: getTextColorValue(colors[key] as any),
         },
       });
     } else if (isPrimarySecondary(key)) {
@@ -69,12 +73,12 @@ function setPaletteColors(
       });
     } else if (isLightDark(key) && colorKey.length === 0) {
       setColorToElement({
-        color: colors[key],
+        color: colors[key] as any,
         colorKey: key,
       });
     } else {
       setColorToElement({
-        color: colors[key],
+        color: colors[key] as any,
         colorKey: key === "main" ? colorKey : `${colorKey}-${key}`,
       });
     }
@@ -99,7 +103,7 @@ export function setModeColors(
       setPropertiesToStyleSheet({
         properties: {
           key: `--${colorKey}-${key}`,
-          value: getTextColorValue(colors[key]),
+          value: getTextColorValue(colors[key] as any),
         },
       });
     }

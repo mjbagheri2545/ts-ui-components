@@ -23,7 +23,7 @@
   scale: var(--scale);
 }
 
-.ButtonBase.button-shadow::before {
+.ButtonBase.shadow::before {
   content: " ";
   position: absolute;
   top: 20%;
@@ -38,13 +38,7 @@
   border-radius: inherit;
   transition: var(--standard-transition);
 }
-
-[data-mode="dark"] .ButtonBase.button-shadow::before {
-  top: 15%;
-  opacity: 0.6;
-}
-
-.ButtonBase.button-shadow:hover::before {
+.ButtonBase.shadow:hover::before {
   visibility: hidden;
   opacity: 0;
 }

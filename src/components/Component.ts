@@ -4,6 +4,8 @@ import HtmlTags from "../constants/types/htmlTags.types";
 import { ClassNames } from "../constants/types/classNames.types";
 import {
   addClassNames,
+  appendChild,
+  appendChildren,
   classNamesToArray,
   getElementComponent,
 } from "../utilities/components.utilities";
@@ -45,8 +47,8 @@ abstract class CreateComponent<
   private props: ComponentProps;
 
   constructor({
-    elementName = "div",
     props = {},
+    elementName = "div",
     component,
   }: Constructor = {}) {
     this._component = (
@@ -79,6 +81,14 @@ abstract class CreateComponent<
 
   protected addSpecificClassNames(classNames: ClassNames) {
     addClassNames(this.component, classNames);
+  }
+
+  protected appendChild(child: Component) {
+    appendChild(this.component, child);
+  }
+
+  protected appendChildren(children: Components | undefined) {
+    appendChildren(this.component, children);
   }
 
   private _addProps(): void {

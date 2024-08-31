@@ -3,10 +3,6 @@
   font-size: var(--fs-large);
   padding: 0.4rem 0.7rem;
 }
-.Link:visited,
-.Link:active {
-  filter: hue-rotate(30deg);
-}
 .Link::before {
   content: " ";
   position: absolute;

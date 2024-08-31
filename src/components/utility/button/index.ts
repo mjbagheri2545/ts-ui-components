@@ -1,5 +1,4 @@
 import {
-  addConditionalClassNames,
   appendChild,
   pickComponentProps,
   qs,
@@ -40,7 +39,6 @@ class Button extends ButtonBase {
     this._options.variant = variant || this._options.variant;
     this._create();
   }
-
   get isLoading() {
     return this._isLoading;
   }
@@ -57,8 +55,9 @@ class Button extends ButtonBase {
         size: componentHeight * 0.75,
         dataAttributes: "buttonSpinner",
         classNames: "position-absolute",
+        color: "light",
       });
-      appendChild(this.component, spinner.component);
+      this.appendChild(spinner.component);
     } else {
       this.component.removeChild(
         qs("[data-button-spinner]", this.component) as ElementComponent
@@ -72,12 +71,9 @@ class Button extends ButtonBase {
     this.addSpecificClassNames([
       "Button",
       "rounded",
+      "shadow",
       this._options.variant,
       this._options.isFullWidth ? "width-100" : "",
-      ...addConditionalClassNames(
-        "button-shadow",
-        this._options.variant === "filled"
-      ),
     ]);
   }
 
@@ -92,19 +88,19 @@ class Button extends ButtonBase {
   private _appendChild(child: Component) {
     if (typeof child === "string") {
       const box = new Box<HTMLSpanElement>({
-        classNames: ["text", "standard-transition"],
+        classNames: "text",
         elementName: "span",
       });
       appendChild(box.component, child);
-      return appendChild(this.component, box.component);
+      return this.appendChild(box.component);
     }
-    appendChild(this.component, child);
+    this.appendChild(child);
   }
 
   protected _addRipples(): void {
-    appendChild(this.component, new Ripples());
+    this.appendChild(new Ripples());
 
-    this.component.addEventListener("click", (e: MouseEvent) => {
+    this.component.addEventListener("click", (e) => {
       const scaleFactor =
         this.options.size === "medium"
           ? 1

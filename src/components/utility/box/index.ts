@@ -1,8 +1,5 @@
 import HtmlTags from "../../../constants/types/htmlTags.types";
-import {
-  appendChildren,
-  pickComponentProps,
-} from "../../../utilities/components.utilities";
+import { pickComponentProps } from "../../../utilities/components.utilities";
 import CreateComponent, {
   ComponentProps,
   Components,
@@ -11,7 +8,6 @@ import CreateComponent, {
 
 export type BoxProps = Partial<{
   elementName: HtmlTags;
-  component: CreateComponent<ElementComponent>;
   children: Components;
 }>;
 
@@ -25,7 +21,6 @@ class Box<
     super({
       elementName: options.elementName || "div",
       props,
-      component: options.component,
     });
     this.options = options;
     this._create();
@@ -36,7 +31,7 @@ class Box<
       "Box",
       `${this.options.elementName || "div"}-Box`,
     ]);
-    appendChildren(this.component, this.options.children);
+    this.appendChildren(this.options.children);
   }
 }
 

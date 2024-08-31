@@ -1,10 +1,9 @@
-import { appendChild } from "../../../utilities/components.utilities";
+import { appendChild, qs } from "../../../utilities/components.utilities";
 import {
   Properties,
   Property,
   setProperties,
 } from "../../../utilities/style.utilities";
-import { qs } from "../../../utilities/components.utilities";
 import CreateComponent, {
   ElementComponent,
   NormalComponent,
@@ -23,22 +22,20 @@ type CreateRipples = {
 class Ripples extends CreateComponent<HTMLSpanElement> {
   constructor() {
     super({
-      component: new Box({
-        elementName: "span",
+      elementName: "span",
+      props: {
         dataAttributes: "ripples",
-      }),
+        classNames: [
+          "ButtonBase-ripples",
+          "Ripples",
+          "position-absolute",
+          "overflow-hidden",
+        ],
+      },
     });
-    this._create();
   }
 
-  protected _create() {
-    this.addSpecificClassNames([
-      "ButtonBase-ripples",
-      "Ripples",
-      "position-absolute",
-      "overflow-hidden",
-    ]);
-  }
+  protected _create() {}
 
   static createRipples({
     component,
@@ -64,10 +61,11 @@ class Ripples extends CreateComponent<HTMLSpanElement> {
 
     setProperties({ element: ripples, properties });
 
-    appendChild(qs("[data-ripples]", component)!, ripples);
+    appendChild(qs("[data-ripples]", component) as ElementComponent, ripples);
 
-    setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       ripples.component.remove();
+      clearTimeout(timeoutId);
     }, animationDuration);
 
     return ripples;

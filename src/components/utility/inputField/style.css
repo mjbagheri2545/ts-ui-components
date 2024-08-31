@@ -1,0 +1,152 @@
+.InputField {
+  --height: 48px;
+  margin-bottom: 1rem;
+  width: fit-content;
+  --input-padding: 1.1rem;
+  --label-padding: 3px;
+  --icon-padding: 0.75rem;
+  --main-color: var(--color);
+}
+
+.InputField.hasIconButton {
+  --icon-padding: 1.25rem;
+}
+
+[data-mode="dark"] .InputField {
+  --main-color: var(--color-light);
+}
+
+.InputField.isError {
+  margin-bottom: 0;
+}
+
+.InputField.width-100 {
+  max-width: 50rem;
+}
+
+.InputField .input {
+  border: 1px solid var(--main-color);
+  height: var(--height);
+  min-width: 16rem;
+  padding-left: var(--input-padding);
+  padding-right: 0.75rem;
+  font-size: var(--fs-large);
+  transition-property: box-shadow;
+}
+
+.InputField .input:focus,
+.InputField .input.active {
+  box-shadow: 0 0 0 1px var(--main-color);
+}
+
+.InputField .input::placeholder {
+  color: transparent;
+  transition: var(--standard-transition);
+}
+
+.InputField .input:focus::placeholder {
+  color: var(--text-secondary);
+}
+
+.InputField .label {
+  top: calc(var(--height) / 2 - 1px);
+  left: 0;
+  transform: translate(calc(1.6rem - var(--label-padding)), -50%);
+  background-color: var(--bg-color);
+  padding: 0 var(--label-padding);
+  cursor: text;
+  font-weight: 530;
+  color: hsla(var(--dark-channel), 0.75);
+}
+
+[data-mode="dark"] .InputField .label {
+  color: hsla(var(--light-channel), 0.75);
+}
+
+.InputField.isRequired .label::after {
+  content: "*";
+  position: relative;
+  color: var(--error);
+  margin-left: 0.175rem;
+  top: 0.12rem;
+}
+
+.InputField .input.width-100 {
+  max-width: 50rem;
+}
+
+.InputField.isRequired.isError .label::after {
+  color: var(--error-light);
+}
+
+.InputField .input:focus ~ .label,
+.InputField .input.active ~ .label {
+  font-size: var(--fs-small);
+  top: 0;
+  transform: translate(calc(var(--input-padding) - var(--label-padding)), -50%);
+  color: var(--main-color);
+}
+
+.InputField .input-icon {
+  position: absolute;
+  top: calc(var(--height) / 2 + 1px);
+  right: var(--icon-padding);
+  transform: translateY(-50%);
+  width: fit-content;
+  opacity: 0.8;
+}
+
+.InputField .input-icon.position-start {
+  right: auto;
+  left: var(--icon-padding);
+}
+
+.InputField.hasIconButton .input-icon {
+  right: 0.5rem;
+}
+
+.InputField.hasIconButton .input-icon.position-start {
+  left: 0.5rem;
+}
+
+.InputField .input-icon.position-start ~ .input {
+  padding-left: calc(var(--input-padding) + 2 * var(--icon-padding));
+}
+
+.InputField.hasIconButton .input-icon.position-start ~ .input {
+  padding-left: calc(var(--input-padding) + 2 * var(--icon-padding) + 0.3rem);
+}
+
+.InputField .input-icon.position-start ~ .label {
+  transform: translate(
+    calc(1.4rem - var(--label-padding) + 2 * var(--icon-padding)),
+    -50%
+  );
+}
+
+.InputField .input-icon.position-start ~ .input:focus ~ .label {
+  font-size: var(--fs-small);
+  top: 0;
+  transform: translate(
+    calc(var(--input-padding) - var(--label-padding) + 2 * var(--icon-padding)),
+    -50%
+  );
+}
+
+.InputField .error-message {
+  display: none;
+}
+
+.InputField.isError .label {
+  color: var(--main-color);
+}
+
+.InputField.isError .error-message {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: var(--fs-small);
+  margin: 0 0.75rem;
+  margin-top: 0.15rem;
+  margin-bottom: 1rem;
+  color: var(--main-color);
+}
