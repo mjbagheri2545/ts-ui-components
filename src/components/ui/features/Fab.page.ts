@@ -23,7 +23,7 @@ class FabFeatures extends Features {
     ];
     return this._createFeaturePage({
       items,
-      title: "fab (floating action button)",
+      title: "fab",
     });
   }
 
@@ -97,15 +97,18 @@ class FabFeatures extends Features {
       }
     );
 
+    let list: List["component"];
+
     eventButton.component.addEventListener("click", () => {
       const fab = qs("[data-animation-list-fab]") as Fab["component"];
-      const list = fab!.parentElement!.parentElement as List["component"];
+      list = list || (fab.parentElement!!.parentElement as List["component"]);
       if (fab == null) {
         appendChild(
           list,
           new ListItem(
             new Fab(new Icon({ iconName: "add" }), {
               styles: this._getFabStyles(),
+              dataAttributes: "animationListFab",
             })
           )
         );
@@ -113,7 +116,7 @@ class FabFeatures extends Features {
       } else {
         fab.classList.add("leave");
         setTimeout(() => {
-          fab.parentElement?.remove();
+          fab.parentElement!?.remove();
         }, TRANSITION.leaving.time);
         qs(".text", eventButton)!.innerText = "show fab";
       }

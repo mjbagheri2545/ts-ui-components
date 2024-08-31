@@ -89,7 +89,15 @@ abstract class Features {
 
     children.push(new ToggleMode().component);
 
-    return new Box({ children });
+    return new Box({
+      children,
+      styles: {
+        "& .Fab": {
+          right: "1.75rem",
+          bottom: "1.75rem",
+        },
+      },
+    });
   }
 
   protected _createFeatureListItem(component: NormalComponent, text: string) {

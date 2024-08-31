@@ -10,7 +10,7 @@
   margin: 0;
   padding: 0;
   font: inherit;
-  font-family:  sans-serif;
+  font-family: sans-serif;
 }
 
 ::-moz-selection {
@@ -36,7 +36,7 @@ body {
 }
 
 body {
-  --bg-color: "#fff",
+  --bg-color: #fff;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeSpeed;
@@ -44,7 +44,7 @@ body {
   transition: var(--standard-transition);
 }
 
-[data-mode="dark"]  body {
+[data-mode="dark"] body {
   --bg-color: var(--grey-one);
 }
 

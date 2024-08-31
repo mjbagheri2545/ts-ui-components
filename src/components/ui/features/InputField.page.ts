@@ -150,7 +150,10 @@ class InputFieldFeatures extends Features {
           new InputField({
             label: "full width without limit",
             isFullWidth: true,
-            styles: { "& .input": { maxWidth: "none !important" } },
+            styles: {
+              maxWidth: "none !important",
+              "& .input": { maxWidth: "none !important" },
+            },
           }),
           { classNames: "width-100" }
         ),

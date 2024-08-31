@@ -21,7 +21,7 @@ import {
   getElementComponent,
   qs,
 } from "./components.utilities";
-import { localStorageGetItem, localStorageSetItem } from "./localstorage.utilities";
+import { localStorageGetItem, localStorageSetItem } from "./localStorage.utilities";
 
 export function styleInitializer() {
   createStyleSheet();
